@@ -10,6 +10,8 @@ function App() {
     <h1>Seja bem-vindo!</h1>
       <ul>
         <li><Link to="/agendamentos">Lista de Agendamentos</Link></li>
+        <li><Link to="/usuarios">Lista de Usuários</Link></li>
+        <li><Link to="/servicos">Lista de Serviços</Link></li>
       </ul>
       <AppRoutes />
       </>

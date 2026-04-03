@@ -1,8 +1,6 @@
 import { Agendamento } from "../../../types/Agendamento";
 import { TipoUsuario } from "../../../types/Usuario";
 
-
-
 export const agendamentoTeste: Agendamento[] = [
     {
         id: 1,
