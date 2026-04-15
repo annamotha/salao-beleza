@@ -1,20 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { AppRoutes } from './routes';
-import { Link } from 'react-router-dom';
+import ResponsiveAppBar from './componentes/HeaderMui';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
-    <>
-    <h1>Seja bem-vindo!</h1>
-      <ul>
-        <li><Link to="/agendamentos">Lista de Agendamentos</Link></li>
-        <li><Link to="/usuarios">Lista de Usuários</Link></li>
-        <li><Link to="/servicos">Lista de Serviços</Link></li>
-      </ul>
+    <AuthProvider>
+      <ResponsiveAppBar />
       <AppRoutes />
-      </>
+    </AuthProvider>
   );
 }
 

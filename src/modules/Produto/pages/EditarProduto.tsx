@@ -1,27 +1,41 @@
+import { useState, useEffect } from "react";
 import { Box, Button, Container, TextField, Typography, Alert, CircularProgress } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDataManager } from "../../../hooks/useDataManager";
-import { Servico } from "../../../types/Servico";
-import { servicoTeste } from "../types/servico-test";
+import { Produto } from "../../../types/Produto";
+import { produtoTeste } from "../types/produto-test";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export function CadastrarServico() {
+export function EditarProduto() {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { add } = useDataManager<Servico>({
-        initialData: servicoTeste,
-        storageKey: "salao_servicos",
+    const { getById, update } = useDataManager<Produto>({
+        initialData: produtoTeste,
+        storageKey: "salao_produtos",
     });
+
+    const produto = id ? getById(Number(id)) : null;
 
     const [form, setForm] = useState({
         nome: "",
         preco: "",
-        duracao: ""
+        quantidade: ""
     });
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (produto) {
+            setForm({
+                nome: produto.nome,
+                preco: String(produto.preco),
+                quantidade: String(produto.quantidade),
+            });
+        }
+    }, [produto]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -37,35 +51,51 @@ export function CadastrarServico() {
             setError("Preço deve ser maior que 0");
             return false;
         }
-        if (!form.duracao || Number(form.duracao) <= 0) {
-            setError("Duração deve ser maior que 0 minutos");
+        if (!form.quantidade || Number(form.quantidade) < 0) {
+            setError("Quantidade não pode ser negativa");
             return false;
         }
         return true;
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+        if (!validateForm() || !id) return;
 
         setLoading(true);
         try {
-            add({
+            update(Number(id), {
                 nome: form.nome,
                 preco: Number(form.preco),
-                duracao: Number(form.duracao),
+                quantidade: Number(form.quantidade),
             });
-            navigate("/servicos");
+            navigate(`/produtos/${id}`);
         } catch (err) {
-            setError("Erro ao criar serviço");
+            setError("Erro ao atualizar produto");
         } finally {
             setLoading(false);
         }
     };
 
+    if (!produto) {
+        return (
+            <Container maxWidth="sm" sx={{ py: 3 }}>
+                <Alert severity="error">Produto não encontrado</Alert>
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate("/produtos")}
+                    sx={{ mt: 2 }}
+                >
+                    Voltar
+                </Button>
+            </Container>
+        );
+    }
+
     return (
         <Container maxWidth="sm" sx={{ py: 3 }}>
             <Typography variant="h4" gutterBottom>
-                Novo Serviço
+                Editar Produto
             </Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -92,16 +122,17 @@ export function CadastrarServico() {
                     inputProps={{ step: "0.01", min: "0" }}
                 />
                 <TextField
-                    label="Duração (minutos)"
-                    name="duracao"
+                    label="Quantidade"
+                    name="quantidade"
                     type="number"
-                    value={form.duracao}
+                    value={form.quantidade}
                     onChange={handleChange}
                     fullWidth
                     disabled={loading}
                     required
-                    inputProps={{ min: "1" }}
+                    inputProps={{ min: "0" }}
                 />
+
                 <Box sx={{ display: "flex", gap: 1 }}>
                     <Button
                         variant="contained"
@@ -115,7 +146,7 @@ export function CadastrarServico() {
                     <Button
                         variant="outlined"
                         startIcon={<CancelIcon />}
-                        onClick={() => navigate("/servicos")}
+                        onClick={() => navigate("/produtos")}
                         disabled={loading}
                         fullWidth
                     >

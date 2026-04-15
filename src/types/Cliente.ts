@@ -1,5 +1,6 @@
-import { Usuario } from "./Usuario";
+import { TipoUsuario, Usuario } from "./Usuario";
 
-export type Cliente = Usuario & {
+export type Cliente = Omit<Usuario, "tipo"> & {
   telefone: string;
+  tipo: TipoUsuario.CLIENTE;
 };

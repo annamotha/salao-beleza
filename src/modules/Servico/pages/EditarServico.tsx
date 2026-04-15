@@ -1,18 +1,22 @@
 import { Box, Button, Container, TextField, Typography, Alert, CircularProgress } from "@mui/material";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDataManager } from "../../../hooks/useDataManager";
 import { Servico } from "../../../types/Servico";
 import { servicoTeste } from "../types/servico-test";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export function CadastrarServico() {
+export function EditarServico() {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { add } = useDataManager<Servico>({
+    const { getById, update } = useDataManager<Servico>({
         initialData: servicoTeste,
         storageKey: "salao_servicos",
     });
+
+    const servico = id ? getById(Number(id)) : null;
 
     const [form, setForm] = useState({
         nome: "",
@@ -22,6 +26,16 @@ export function CadastrarServico() {
 
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (servico) {
+            setForm({
+                nome: servico.nome,
+                preco: String(servico.preco),
+                duracao: String(servico.duracao),
+            });
+        }
+    }, [servico]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,27 +59,43 @@ export function CadastrarServico() {
     };
 
     const handleSubmit = async () => {
-        if (!validateForm()) return;
+        if (!validateForm() || !id) return;
 
         setLoading(true);
         try {
-            add({
+            update(Number(id), {
                 nome: form.nome,
                 preco: Number(form.preco),
                 duracao: Number(form.duracao),
             });
-            navigate("/servicos");
+            navigate(`/servicos/${id}`);
         } catch (err) {
-            setError("Erro ao criar serviço");
+            setError("Erro ao atualizar serviço");
         } finally {
             setLoading(false);
         }
     };
 
+    if (!servico) {
+        return (
+            <Container maxWidth="sm" sx={{ py: 3 }}>
+                <Alert severity="error">Serviço não encontrado</Alert>
+                <Button
+                    variant="outlined"
+                    startIcon={<ArrowBackIcon />}
+                    onClick={() => navigate("/servicos")}
+                    sx={{ mt: 2 }}
+                >
+                    Voltar
+                </Button>
+            </Container>
+        );
+    }
+
     return (
         <Container maxWidth="sm" sx={{ py: 3 }}>
             <Typography variant="h4" gutterBottom>
-                Novo Serviço
+                Editar Serviço
             </Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}

@@ -2,27 +2,214 @@ import { Agendamento } from "../../../types/Agendamento";
 import { TipoUsuario } from "../../../types/Usuario";
 
 export const agendamentoTeste: Agendamento[] = [
-    {
+  {
+    id: 1,
+    cliente: {
+      id: 1,
+      nome: "Anna Silva",
+      email: "anna@email.com",
+      senha: "123456",
+      tipo: TipoUsuario.CLIENTE,
+      telefone: "(11) 99999-0001",
+    },
+    servicoProduto: {
+      servico: {
         id: 1,
-        usuario: {
-            id: 1,
-            nome: "Anna",
-            email: "anna@email.com",
-            senha: "123456",
-            tipo: TipoUsuario.CLIENTE,
-        },
-        servico: {
-            id: 1,
-            nome: "Corte de Cabelo",
-            preco: 50,
-            duracao: 30
-        },
-        horario: {
-            id: 1,
-            hora: "14:00",
-            disponivel: true
-        },
-        status: "AGENDADO"
-    }
-
+        nome: "Corte de Cabelo",
+        preco: 100,
+        duracao: 40,
+      },
+      produto: {
+        id: 1,
+        nome: "Shampoo Profissional",
+        preco: 25,
+        quantidade: 50,
+      },
+      quantidadeUsada: 1,
+    },
+    horario: {
+      id: 1,
+      data: "2024-07-01",
+      hora: "14:00",
+      disponivel: false,
+      funcionario: {
+        id: 10,
+        nome: "Carlos Souza",
+        email: "carlos@salon.com",
+        senha: "123456",
+        tipo: TipoUsuario.FUNCIONARIO,
+        area: "Cabelo",
+        atributo19: 1,
+      },
+    },
+    status: "AGENDADO",
+  },
+  {
+    id: 2,
+    cliente: {
+      id: 2,
+      nome: "Maria Santos",
+      email: "maria@email.com",
+      senha: "123456",
+      tipo: TipoUsuario.CLIENTE,
+      telefone: "(11) 98888-0002",
+    },
+    servicoProduto: {
+      servico: {
+        id: 2,
+        nome: "Hidratação Capilar",
+        preco: 60,
+        duracao: 30,
+      },
+      produto: {
+        id: 2,
+        nome: "Máscara de Hidratação",
+        preco: 30,
+        quantidade: 20,
+      },
+      quantidadeUsada: 1,
+    },
+    horario: {
+      id: 2,
+      data: "2024-07-02",
+      hora: "10:00",
+      disponivel: false,
+      funcionario: {
+        id: 11,
+        nome: "Paula Ferreira",
+        email: "paula@salon.com",
+        senha: "123456",
+        tipo: TipoUsuario.FUNCIONARIO,
+        area: "Tratamentos",
+        atributo19: 2,
+      },
+    },
+    status: "CONCLUIDO",
+  },
+  {
+    id: 3,
+    cliente: {
+      id: 6,
+      nome: "Jennifer Costa",
+      email: "jennifer@email.com",
+      senha: "123456",
+      tipo: TipoUsuario.CLIENTE,
+      telefone: "(11) 97777-0003",
+    },
+    servicoProduto: {
+      servico: {
+        id: 3,
+        nome: "Manicure",
+        preco: 26,
+        duracao: 40,
+      },
+      produto: {
+        id: 3,
+        nome: "Base Fortalecedora",
+        preco: 12,
+        quantidade: 30,
+      },
+      quantidadeUsada: 1,
+    },
+    horario: {
+      id: 3,
+      data: "2024-07-03",
+      hora: "15:30",
+      disponivel: true,
+      funcionario: {
+        id: 12,
+        nome: "Fernanda Lima",
+        email: "fernanda@salon.com",
+        senha: "123456",
+        tipo: TipoUsuario.FUNCIONARIO,
+        area: "Unhas",
+        atributo19: 3,
+      },
+    },
+    status: "AGENDADO",
+  },
+  {
+    id: 4,
+    cliente: {
+      id: 8,
+      nome: "Paula Oliveira",
+      email: "paula@email.com",
+      senha: "123456",
+      tipo: TipoUsuario.CLIENTE,
+      telefone: "(11) 96666-0004",
+    },
+    servicoProduto: {
+      servico: {
+        id: 4,
+        nome: "Pedicure",
+        preco: 40,
+        duracao: 45,
+      },
+      produto: {
+        id: 4,
+        nome: "Esmalte Terapêutico",
+        preco: 15,
+        quantidade: 25,
+      },
+      quantidadeUsada: 1,
+    },
+    horario: {
+      id: 4,
+      data: "2024-07-04",
+      hora: "09:00",
+      disponivel: false,
+      funcionario: {
+        id: 12,
+        nome: "Fernanda Lima",
+        email: "fernanda@salon.com",
+        senha: "123456",
+        tipo: TipoUsuario.FUNCIONARIO,
+        area: "Unhas",
+        atributo19: 3,
+      },
+    },
+    status: "CANCELADO",
+  },
+  {
+    id: 5,
+    cliente: {
+      id: 1,
+      nome: "Anna Silva",
+      email: "anna@email.com",
+      senha: "123456",
+      tipo: TipoUsuario.CLIENTE,
+      telefone: "(11) 99999-0001",
+    },
+    servicoProduto: {
+      servico: {
+        id: 5,
+        nome: "Escova Progressiva",
+        preco: 200,
+        duracao: 120,
+      },
+      produto: {
+        id: 5,
+        nome: "Queratina Premium",
+        preco: 45,
+        quantidade: 10,
+      },
+      quantidadeUsada: 2,
+    },
+    horario: {
+      id: 5,
+      data: "2024-07-05",
+      hora: "11:00",
+      disponivel: true,
+      funcionario: {
+        id: 10,
+        nome: "Carlos Souza",
+        email: "carlos@salon.com",
+        senha: "123456",
+        tipo: TipoUsuario.FUNCIONARIO,
+        area: "Cabelo",
+        atributo19: 1,
+      },
+    },
+    status: "AGENDADO",
+  },
 ];

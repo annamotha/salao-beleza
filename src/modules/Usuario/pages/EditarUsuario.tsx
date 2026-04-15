@@ -1,28 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, TextField, Button, Typography, MenuItem, Box, Alert, CircularProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { usuariosTeste } from "../types/usuarios-test";
 import { useDataManager } from "../../../hooks/useDataManager";
 import { Usuario, TipoUsuario } from "../../../types/Usuario";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export function CadastroUsuario() {
+export function EditarUsuario() {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { add } = useDataManager<Usuario>({
+  const { getById, update } = useDataManager<Usuario>({
     initialData: usuariosTeste,
     storageKey: "salao_usuarios",
   });
 
+  const usuario = id ? getById(Number(id)) : null;
+
   const [form, setForm] = useState({
     nome: "",
     email: "",
-    senha: "",
     tipo: TipoUsuario.CLIENTE,
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (usuario) {
+      setForm({
+        nome: usuario.nome,
+        email: usuario.email,
+        tipo: usuario.tipo,
+      });
+    }
+  }, [usuario]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
     const target = e.target as any;
@@ -43,40 +56,47 @@ export function CadastroUsuario() {
       setError("Email inválido");
       return false;
     }
-    if (!form.senha.trim()) {
-      setError("Senha é obrigatória");
-      return false;
-    }
-    if (form.senha.length < 6) {
-      setError("Senha deve ter no mínimo 6 caracteres");
-      return false;
-    }
     return true;
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm() || !id) return;
 
     setLoading(true);
     try {
-      add({
+      update(Number(id), {
         nome: form.nome,
         email: form.email,
-        senha: form.senha,
         tipo: form.tipo,
       });
-      navigate("/usuarios");
+      navigate(`/usuarios/${id}`);
     } catch (err) {
-      setError("Erro ao criar usuário");
+      setError("Erro ao atualizar usuário");
     } finally {
       setLoading(false);
     }
   };
 
+  if (!usuario) {
+    return (
+      <Container maxWidth="sm" sx={{ py: 3 }}>
+        <Alert severity="error">Usuário não encontrado</Alert>
+        <Button
+          variant="outlined"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate("/usuarios")}
+          sx={{ mt: 2 }}
+        >
+          Voltar
+        </Button>
+      </Container>
+    );
+  }
+
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Novo Usuário
+        Editar Usuário
       </Typography>
 
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -101,18 +121,6 @@ export function CadastroUsuario() {
           fullWidth
           disabled={loading}
           required
-        />
-
-        <TextField
-          label="Senha"
-          name="senha"
-          type="password"
-          value={form.senha}
-          onChange={handleChange}
-          fullWidth
-          disabled={loading}
-          required
-          helperText="Mínimo 6 caracteres"
         />
 
         <TextField

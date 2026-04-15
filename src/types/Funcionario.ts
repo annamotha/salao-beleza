@@ -1,5 +1,6 @@
 import { Usuario } from "./Usuario";
 
 export type Funcionario = Usuario & {
-  especialidade: string;
+  area: string;
+  atributo19: number;
 };
